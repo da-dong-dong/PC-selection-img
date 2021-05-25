@@ -28,7 +28,7 @@ export default {
 
     // 改变vuex
     onClickChangeVuex () {
-      this.act_ticket('我变了哟')
+      this.act_ticket('我变了哟!')
     },
 
     // 获取接口
