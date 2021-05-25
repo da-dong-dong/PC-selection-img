@@ -1,24 +1,20 @@
-# hello-world
+# PC端选片系统
 
-## Project setup
+## 初始化项目
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### 运行项目
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+### 打包项目
 ```
 yarn build
 ```
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 项目构成
+#### 1，使用element-ui框架，全局引入
+#### 2，使用vuex，数据管理+本地数据永久化插件 vuex-persistedstate

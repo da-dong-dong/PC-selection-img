@@ -73,19 +73,10 @@ module.exports = {
     proxy: {
 
       '/api': {
-
-        target: 'http://app.rmsdmedia.com',
-
-        changeOrigin: true,
-
+        target: 'https://api.27yn.cn/api',
+        pathRewrite: { '^/api': '' },
         secure: false,
-
-        pathRewrite: {
-
-          '^/api': ''
-
-        }
-
+        changeOrigin: true
       }
 
     }, // string | Object
