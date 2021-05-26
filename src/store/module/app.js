@@ -1,17 +1,18 @@
 export default {
   namespaced: true,
   state: {
-    // 测试
-    ticket: null
+    // url参数
+    parseUrl: {}
 
   },
   getters: {
-    get_ticket: state => state.ticket
+    get_parseUrl: state => state.parseUrl
 
   },
   mutations: {
-    mut_ticket (state, data) {
-      state.ticket = data
+    // 设置url参数值
+    mut_setParseUrl (state, data) {
+      state.parseUrl = data
     }
 
   },

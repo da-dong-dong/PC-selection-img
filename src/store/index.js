@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import app from './module/app.js'
+import typeModule from './module/typeModule.js'
 // 引入vuex 数据持久化插件
 import createPersistedState from "vuex-persistedstate"
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    app
+    app,
+    typeModule
   },
   plugins: [createPersistedState({
     // 存储在单个页面

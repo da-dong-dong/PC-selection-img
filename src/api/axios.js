@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { bus } from '@/util/util.js'
+import store from '../store/index'
+import qs from 'qs'
 
 // 设置默认请求头
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
@@ -16,6 +18,10 @@ const myAxios = axios.create({
 
 // 添加一个请求拦截器
 myAxios.interceptors.request.use((config) => {
+  const { shopId, ccId, ticket } = store.state.app.parseUrl
+  config.headers.CurrentShopId = shopId
+  config.headers.ccId = ccId
+  config.headers.ticket = ticket
   return config
 }, (error) => {
   // 错误
@@ -26,11 +32,10 @@ myAxios.interceptors.request.use((config) => {
 // 响应拦截器
 myAxios.interceptors.response.use(
   response => {
-    console.log(response)
     if (response.data.code === 200) {
       return Promise.resolve(response.data)
     } else {
-      bus.$message({ showClose: true, type: 'warning', message: response.data.message })
+      bus.$Modal.warning({ title: '提示', content: response.data.message })
       return Promise.reject(response.data)
     }
   },
@@ -66,4 +71,7 @@ export const putJson = (url, params) => {
 // 表单post
 export const postForm = (url, params) => {
   return myAxios.post(url, params, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+}
+export const postFormHeader = (url, params, headers) => {
+  return myAxios.post(url, qs.stringify(params), { headers })
 }
