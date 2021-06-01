@@ -31,3 +31,8 @@ export const getPhotoServer = (params) => {
 export const getAllPic = (params) => {
   return postFormHeader(`${params.url}${baseUrl.getAllPic}`, params.params, params.headers)
 }
+
+// 查找-选片详情
+export const getChooseDetails = (params) => {
+  return get(baseUrl.getChooseDetails, params)
+}

@@ -22,7 +22,6 @@ export default new Vuex.Store({
     // 存储在单个页面
     storage: window.sessionStorage,
     reducer (val) {
-      console.log(val)
       return {
         // 只储存state中的app
         app: val.app
