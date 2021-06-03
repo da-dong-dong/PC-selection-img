@@ -6,12 +6,14 @@ export default {
     allImg: [], // 全部图片
     imgF2Show: true, // ture 隐藏图片  false展示图片
     flagF4: true // 是否正序
+
   },
   getters: {
     get_cacheFileCheck: state => state.cacheFileCheck,
     get_moduleFlge: state => state.moduleFlge,
     get_allImg: state => state.allImg,
     get_imgF2Show: state => state.imgF2Show
+
   },
   mutations: {
     // 设置展示缓存

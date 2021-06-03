@@ -8535,6 +8535,11 @@ throttle-debounce@^1.0.1:
   resolved "http://npm.27yn.cn/throttle-debounce/-/throttle-debounce-1.1.0.tgz#51853da37be68a155cb6e827b3514a3c422e89cd"
   integrity sha512-XH8UiPCQcWNuk2LYePibW/4qL97+ZQ1AN3FNXwZRBNPPowo/NRU5fAlDCSNBJIYCKbioZfuYtMhG4quqoJhVzg==
 
+throttle-debounce@^2.0.1:
+  version "2.3.0"
+  resolved "http://npm.27yn.cn/throttle-debounce/-/throttle-debounce-2.3.0.tgz#fd31865e66502071e411817e241465b3e9c372e2"
+  integrity sha512-H7oLPV0P7+jgvrk+6mwwwBDmxTaxnu9HMXmloNLXwnNO0ZxZ31Orah2n8lU1eMPvsaowP2CX+USCgyovXfdOFQ==
+
 through2@^2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.5.tgz#01c1e39eb31d07cb7d03a96a70823260b23132cd"
@@ -8933,6 +8938,14 @@ v-click-outside-x@^3.7.1:
   resolved "http://npm.27yn.cn/v-click-outside-x/-/v-click-outside-x-3.7.1.tgz#aa03eaa0e41e44cb5207dcf86c2d9f0dd64084c1"
   integrity sha512-WmUgmcIXr9clVpm1AYS/FgHtcDicfnfoxgQCNg4O6vfk9GVnxA0vSqO321ogUo0b7czYTidj7fQENvWFMWOkUg==
 
+v-viewer@^1.6.1:
+  version "1.6.1"
+  resolved "http://npm.27yn.cn/v-viewer/-/v-viewer-1.6.1.tgz#f0868fd9620250e8845e40cfafafe8ba446dcc55"
+  integrity sha512-WswJ+7BKdot8loBDfx0UsLLUm6smDo6cFeEg1i0lInsnL2TUX/4XdmOwqWCBDt0VKHEMKULzauDUjPdTMisj/Q==
+  dependencies:
+    throttle-debounce "^2.0.1"
+    viewerjs "^1.5.0"
+
 v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
@@ -8978,6 +8991,11 @@ view-design@^4.5.0:
     popper.js "^1.14.6"
     tinycolor2 "^1.4.1"
     v-click-outside-x "^3.7.1"
+
+viewerjs@^1.5.0:
+  version "1.9.2"
+  resolved "http://npm.27yn.cn/viewerjs/-/viewerjs-1.9.2.tgz#42b9e5f4c4d3f136478d53e7d564e8b2ba9b5c7e"
+  integrity sha512-08Jz4SOsJ4cNIY9R1fRa1i/CiuZYBfserur7pFPUeOEi/ncrmft0UPKdNBXT3JtHPq9gHU4G9le1Nd5dlvTWKg==
 
 vm-browserify@^1.0.1:
   version "1.1.2"

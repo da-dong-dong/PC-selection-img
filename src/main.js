@@ -10,7 +10,10 @@ import vueDragSelectPro from 'vue-drag-select-pro'
 import 'vue-drag-select-pro/lib/vueDragSelectPro.css'
 import VueDND from 'awe-dnd' // 拖拽
 import VueLazyload from 'vue-lazyload'
+import 'viewerjs/dist/viewer.css' // 大图样式
+import Viewer from 'v-viewer'
 
+Vue.use(Viewer)
 Vue.use(vueDragSelectPro)
 Vue.use(VueDND)
 Vue.use(ElementUI)

@@ -3,72 +3,46 @@
     <div>
         <h3 class="paddingL15">{{textTile}}</h3>
         <div class="result-box" style="height: 100%;" @click="onClickShowModel($event)">
-            <vue-drag-select v-model="selectedList" value-key="name" ref="dragSelect" :item-width="120" :item-height="180" :item-margin="[10, 10, 10, 10]"
+            <div v-if="tabIndex==8">
+              <Button @click="backSelectImg">还原所选</Button>
+              <Button @click="allBackImg" style="margin-left:0.5rem;">全部还原</Button>
+            </div>
+            <vue-drag-select v-if="tabIndex!=8" v-model="selectedList" value-key="name" ref="dragSelect" :item-width="120" :item-height="180" :item-margin="[10, 10, 10, 10]"
                 :warpper-padding="[10, 10, 10, 10]">
                 <template v-for="(item, index) in get_allImg"  :class="actives.indexOf(item.id) >= 0 ? 'img-list-box-active' : ''"
                   v-dragging="{ item: item, list: get_allImg, group: 'item' }">
                     <!-- 入册 入底 -->
                     <drag-select-option v-if="item.goodsNames.includes(tabIndexText) && (tabIndex == 4 || tabIndex == 5)" :key="item.id" :value="item" :item-index="index" v-dragging="{ item: item, list: get_allImg, group: 'item' }">
-                        <div id="clickFn" v-if="index==0"></div>
-                        <div class="img-box" @contextmenu.prevent="OnRightModel($event, item)">
-                          <div>
-                              <img :src="imgF2ShowUrl" alt="" v-if="get_imgF2Show">
-                              <img v-else v-lazy="item.url" alt="" />
-                          </div>
-                          <div style="text-align:center;font-size:12px;">
-                              <div class="text_over" :title="item.name">{{ item.name }}</div>
-                              <div :title="item.goodsNames.join(',')" class="ellipse"> {{ item.goodsNames.join(",") }} </div>
-                          </div>
-                        </div>
+                        <imgModel :item="item" @OnRightModel="OnRightModel"/>
                     </drag-select-option>
                     <!-- 未选 -->
                     <drag-select-option v-else-if="item.goodsNames.length === 0 && tabIndex == 3" :key="item.id" :value="item" :item-index="index" v-dragging="{ item: item, list: get_allImg, group: 'item' }">
-                        <div id="clickFn" v-if="index==0"></div>
-                        <div class="img-box" @contextmenu.prevent="OnRightModel($event, item)">
-                          <div>
-                              <img :src="imgF2ShowUrl" alt="" v-if="get_imgF2Show">
-                              <img v-else v-lazy="item.url" alt="" />
-                          </div>
-                          <div style="text-align:center;font-size:12px;">
-                              <div class="text_over" :title="item.name">{{ item.name }}</div>
-                              <div :title="item.goodsNames.join(',')" class="ellipse"> {{ item.goodsNames.join(",") }} </div>
-                          </div>
-                        </div>
+                        <imgModel :item="item" @OnRightModel="OnRightModel"/>
                     </drag-select-option>
-                    <!-- 未选 -->
+                    <!-- 已经 -->
                     <drag-select-option v-else-if="item.goodsNamesId.includes(tabIndexText) && tabIndex == 2" :key="item.id" :value="item" :item-index="index" v-dragging="{ item: item, list: get_allImg, group: 'item' }">
-                        <div id="clickFn" v-if="index==0"></div>
-                        <div class="img-box" @contextmenu.prevent="OnRightModel($event, item)">
-                          <div>
-                              <img :src="imgF2ShowUrl" alt="" v-if="get_imgF2Show">
-                              <img v-else v-lazy="item.url" alt="" />
-                          </div>
-                          <div style="text-align:center;font-size:12px;">
-                              <div class="text_over" :title="item.name">{{ item.name }}</div>
-                              <div :title="item.goodsNames.join(',')" class="ellipse"> {{ item.goodsNames.join(",") }} </div>
-                          </div>
-                        </div>
+                        <imgModel :item="item" @OnRightModel="OnRightModel"/>
                     </drag-select-option>
                     <!-- 全部 -->
                     <drag-select-option v-else-if="tabIndex == 0" :key="item.id" :value="item" :item-index="index" v-dragging="{ item: item, list: get_allImg, group: 'item' }">
-                        <div id="clickFn" v-if="index==0"></div>
-                        <div class="img-box" @contextmenu.prevent="OnRightModel($event, item)">
-                          <div>
-                              <img :src="imgF2ShowUrl" alt="" v-if="get_imgF2Show">
-                              <img v-else v-lazy="item.url" alt="" />
-                          </div>
-                          <div style="text-align:center;font-size:12px;">
-                              <div class="text_over" :title="item.name">{{ item.name }}</div>
-                              <div :title="item.goodsNames.join(',')" class="ellipse"> {{ item.goodsNames.join(",") }} </div>
-                          </div>
-                        </div>
+                        <imgModel :item="item" @OnRightModel="OnRightModel" v-on="$listeners"/>
+                    </drag-select-option>
+                </template>
+            </vue-drag-select>
+            <vue-drag-select v-else v-model="selectedList" value-key="name" ref="dragSelect" :item-width="120" :item-height="180" :item-margin="[10, 10, 10, 10]"
+                :warpper-padding="[10, 10, 10, 10]">
+                <template v-for="(item, index) in get_delImgs"  :class="actives.indexOf(item.id) >= 0 ? 'img-list-box-active' : ''"
+                  v-dragging="{ item: item, get_delImgs: get_delImgs, group: 'item' }">
+                    <!-- 删除 -->
+                    <drag-select-option :key="item.id" :value="item" :item-index="index" v-dragging="{ item: item, get_delImgs: get_delImgs, group: 'item' }">
+                        <imgModel :item="item" @OnRightModel="OnRightModel"/>
                     </drag-select-option>
                 </template>
             </vue-drag-select>
         </div>
 
-        <!-- 弹窗 -->
-        <div ref="right-el-modalq">
+        <!-- 右键弹窗 -->
+        <div>
           <rightModel :evnets="evnets" v-if="showRightModel" @goodsChange="goodsChange"/>
         </div>
     </div>
@@ -76,32 +50,33 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import rightModel from "./components/rightModel.vue"
+import rightModel from "@/components/rightModel.vue"
+import imgModel from "./components/imgModel.vue"
 export default {
-  props: ["textTile", "tabIndexText", "tabIndex", "showRightModel"],
+  props: ["textTile", "tabIndexText", "tabIndex", "showRightModel", "selectedBig"],
   components: {
-    rightModel
-
+    rightModel,
+    imgModel
   },
   computed: {
     ...mapGetters("typeModule", [
-      "get_allImg",
-      "get_imgF2Show"
+      "get_allImg"
     ]),
     ...mapGetters("app", [
-      "get_picGoods"
+      "get_picGoods",
+      "get_delImgs"
     ])
   },
   data () {
     return {
       selectedList: [],
-      imgF2ShowUrl: require("../../assets/JPGE2.png"),
       evnets: ''
     }
   },
   methods: {
     ...mapMutations('app', [
-      'mut_picGoods'
+      'mut_picGoods',
+      'mut_delImgs'
     ]),
     ...mapMutations("typeModule", [
       "mut_allImg"
@@ -148,6 +123,7 @@ export default {
     // 勾选按钮
     goodsChange (e, val) {
       const arrp = Array.from(new Set([...this.selectedList]))
+      let delImg = []
       if (e) {
         // 选中
         for (let i = 0; i < arrp.length; i++) {
@@ -156,6 +132,7 @@ export default {
             arrp[i].goodsNamesId.push(val.itemGoodsId)
             this.$set(arrp[i], 'isCheck', true)
           }
+          delImg.push(arrp[i].id)
           val.imgIds.push(arrp[i].id)
         }
       } else {
@@ -178,11 +155,15 @@ export default {
         }
         return item
       })
+      // 更新商品
       this.mut_picGoods(picGoods)
       let allImg = this.get_allImg
+      if (delImg.length > 0) allImg.push(...this.get_delImgs.filter(item => delImg.includes(item.id)))
+      // 更新删除数据
+      this.mut_delImgs(this.get_delImgs.filter(item => !delImg.includes(item.id)))
       allImg.map(item => {
         let json = {}
-        this.get_picGoods.map(_ => {
+        picGoods.map(_ => {
           if (_.imgIds.includes(item.id)) {
             json[_.itemGoodsId] = _.name
           }
@@ -190,14 +171,47 @@ export default {
         item.goodsNamesId = Object.keys(json)
         item.goodsNames = Object.keys(json).map(item => json[item])
       })
+      // 更新全部图片
       this.mut_allImg(allImg)
 
       // 隐藏弹框
-      if (this.tabIndex !== 0) this.$emit("update:showRightModel", false)
+      if (this.tabIndex !== 0) {
+        this.$emit("update:showRightModel", false)
+        // 清空选中值
+        this.selectedList = []
+      }
+    },
+
+    // 还原所选
+    backSelectImg () {
+      let allImg = this.get_allImg
+      let delImg = this.selectedList.map(item => item.id)
+      allImg.push(...this.get_delImgs.filter(item => delImg.includes(item.id)))
+      // 更新删除数据
+      this.mut_delImgs(this.get_delImgs.filter(item => !delImg.includes(item.id)))
+      // 更新全部图片
+      this.mut_allImg(allImg)
+    },
+
+    // 还原全部
+    allBackImg () {
+      let allImg = this.get_allImg
+      let delImg = this.get_delImgs.map(item => item.id)
+      allImg.push(...this.get_delImgs.filter(item => delImg.includes(item.id)))
+      // 更新删除数据
+      this.mut_delImgs(this.get_delImgs.filter(item => !delImg.includes(item.id)))
+      // 更新全部图片
+      this.mut_allImg(allImg)
     }
   },
   mounted () {
     this.geiWindowChange()
+  },
+  watch: {
+    // 监听选中值
+    selectedList () {
+      this.$emit("update:selectedBig", this.selectedList)
+    }
   }
 
 }
