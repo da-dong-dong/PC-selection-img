@@ -1,6 +1,6 @@
 let baseApi
 // VUE_APP_MODE  VUE_APP_MODE
-switch (process.env.VUE_APP_MODE) {
+switch ('test') {
   case 'production':
     baseApi = `//napi.lyfz.net/pro/api`
     break
@@ -18,7 +18,16 @@ const baseUrl = {
   updateCloudChooseType: `${baseApi}/store/order/item/update/updateCloudChooseType`, // 更新-子订单的选片类型
   getPhotoServer: `${baseApi}/store/order/item/find/photoServer`, // 查找-子订单相片服务器
   getAllPic: '/fserver/FindOrderFiles', // 获取指定指订的相片集合
-  getChooseDetails: `${baseApi}/store/order/item/process/choose/details` // 查找-选片详情
+  getChooseDetails: `${baseApi}/store/order/item/process/choose/details`, // 查找-选片详情
+  getItemChooseSaleSumPrice: `${baseApi}/store/financia/order/late/getItemChooseSaleSumPrice`, // 新增-后期录入记录和收款
+  addEntryReceipt: `${baseApi}/store/financia/order/late/addEntryReceipt`, // 新增-后期录入记录和收款
+  getCategoryId: `${baseApi}/base/producer/getCategoryId`, // 获取选片师类别
+  updateChildData: `${baseApi}/store/order/item/goods/choose/update`, // 更新-子订单商品
+  categoryList: `${baseApi}/base/category/list`, // 取件方式
+  getGoodsList: `${baseApi}/goods/goods/toolList`, // 获取 产品列表
+  andChoose: `${baseApi}/store/order/item/goods/choose/add`, // 加选子订单产品
+  upChildOrderGrade: `${baseApi}/store/order/item/goods/choose/upgrade`, // 子订单产品升级
+  delChildOrder: `${baseApi}/store/order/item/goods/deleteGoods` // 删除子订单列表
 }
 
 export default baseUrl

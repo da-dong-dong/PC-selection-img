@@ -5,15 +5,22 @@ export default {
     moduleFlge: 1, // 1:选片模式 ，2：查看模式
     allImg: [], // 全部图片
     imgF2Show: true, // ture 隐藏图片  false展示图片
-    flagF4: true // 是否正序
+    flagF4: true, // 是否正序
+    jtotalPrice: 0, // 加挑金额
+    saleCategoryId: null, // 选片师类别
+    pickList: [], // 取件方式
+    goodesList: [] // 商品类别
 
   },
   getters: {
     get_cacheFileCheck: state => state.cacheFileCheck,
     get_moduleFlge: state => state.moduleFlge,
     get_allImg: state => state.allImg,
-    get_imgF2Show: state => state.imgF2Show
-
+    get_imgF2Show: state => state.imgF2Show,
+    get_jtotalPrice: state => state.jtotalPrice,
+    get_saleCategoryId: state => state.saleCategoryId,
+    get_pickList: state => state.pickList,
+    get_goodesList: state => state.goodesList
   },
   mutations: {
     // 设置展示缓存
@@ -57,6 +64,26 @@ export default {
         })
       }
       state.flagF4 = !state.flagF4
+    },
+
+    // 加挑
+    mut_jtotalPrice (state, data) {
+      state.jtotalPrice = data
+    },
+
+    // 选片师类别
+    mut_saleCategoryId (state, data) {
+      state.saleCategoryId = data
+    },
+
+    // 取件方式
+    mut_pickList (state, data) {
+      state.pickList = data
+    },
+
+    // 商品类别
+    mut_goodesList (state, data) {
+      state.goodesList = data
     }
 
   },

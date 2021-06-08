@@ -4,6 +4,8 @@ export default {
     parseUrl: {}, // url参数
     picGoods: [], // 选片商品
     delImgs: [], // 删除图片
+    photoInstructions: {}, // 客人要求
+    customerInstructions: '', // 客户要求
     details: {} // 选片详情
 
   },
@@ -11,6 +13,8 @@ export default {
     get_parseUrl: state => state.parseUrl,
     get_picGoods: state => state.picGoods,
     get_delImgs: state => state.delImgs,
+    get_photoInstructions: state => state.photoInstructions,
+    get_customerInstructions: state => state.customerInstructions,
     get_details: state => state.details
 
   },
@@ -28,6 +32,16 @@ export default {
     // 删除图片
     mut_delImgs (state, data) {
       state.delImgs = data
+    },
+
+    // 客人要求
+    mut_photoInstructions (state, data) {
+      state.photoInstructions = data
+    },
+
+    // 客户要求
+    mut_customerInstructions (state, data) {
+      state.customerInstructions = data
     },
 
     // 详情信息

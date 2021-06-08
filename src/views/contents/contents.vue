@@ -2,7 +2,7 @@
 <template>
     <div>
         <h3 class="paddingL15">{{textTile}}</h3>
-        <div class="result-box" style="height: 100%;" @click="onClickShowModel($event)">
+        <div class="result-box" style="height: 100%;" @click="onClickShowModel($event)" v-if="tabIndex!==9">
             <div v-if="tabIndex==8">
               <Button @click="backSelectImg">还原所选</Button>
               <Button @click="allBackImg" style="margin-left:0.5rem;">全部还原</Button>
@@ -43,7 +43,7 @@
 
         <!-- 右键弹窗 -->
         <div>
-          <rightModel :evnets="evnets" v-if="showRightModel" @goodsChange="goodsChange"/>
+          <rightModel :evnets="evnets" v-if="showRightModel" @goodsChange="goodsChange" @onClickShowModel="onClickShowModel" v-on="$listeners"/>
         </div>
     </div>
 </template>

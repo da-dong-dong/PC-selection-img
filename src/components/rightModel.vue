@@ -4,7 +4,7 @@
         <Modal class="yunmeng right-el" :mask="false" ref="right-el-modal" v-model="popup1" :closable="false" width="400">
             <div class="title" slot="header">
                 <span v-once>添加到产品</span>
-                <span class="dianji" v-if="get_moduleFlge==1" @click="showPopup(1)">点击添加相片修改要求</span>
+                <span class="dianji" v-if="get_moduleFlge==1" @click="showPopup">点击添加相片修改要求</span>
                 <span class="dianji" style="cursor: not-allowed;" v-else >点击添加相片修改要求</span>
             </div>
             <div>
@@ -12,14 +12,14 @@
                 <ul class="list-box">
                     <li v-for="(item, index) in get_picGoods" :key="index">
                     <span class="check">
-                        <span class="p-list-check" v-if="item.p_img_count >= 1" @click="p_list_init">
-                        <span><Icon type="md-remove"/></span>
-                        {{ item.name }}
+                        <span class="p-list-check" v-if="checkP(item)" @click="p_list_init">
+                          <span class="check"><Icon type="md-remove"/></span>
+                          {{ item.name }}
                         </span>
                         <!--背壳车摆-->
                         <Checkbox v-else v-model="item.isCheck" :disabled="get_moduleFlge==2" @on-change="goodsChange($event, item)">{{ item.name }}</Checkbox>
                     </span>
-                    <span class="num" @click="showProductImg(item)">
+                    <span class="num" >
                         <span>[{{item.imgIds.length || 0}}]</span>
                     </span>
                     <span v-if="get_moduleFlge==1" class="sheji" @click="virtualFun(item)">
@@ -40,6 +40,7 @@
             </div>
       <div slot="footer"></div>
     </Modal>
+
     </div>
 </template>
 
@@ -59,6 +60,7 @@ export default {
     return {
       popup1: true,
       productList: []
+
     }
   },
   mounted () {
@@ -88,25 +90,55 @@ export default {
     })
   },
   methods: {
+    // 检测p
+    checkP (item) {
+      if (item.p_list.length === 0) {
+        return false
+      }
+      if (item.p_list.length >= 1 && item.imgIds.length > 0) {
+        if (item.p_list[0].imgArr.length > 0) {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
     // 勾选按钮
     goodsChange (e, val) {
       this.$emit("goodsChange", e, val)
     },
 
-    // 跳转相关产品查看图片
-    showProductImg (k) {
-      this.$router.push({ name: "selectedList", query: { id: k.goodsId } })
+    // 已有虚拟设计提示
+    p_list_init () {
+      this.$Modal.warning({
+        title: "提示",
+        content: `当前商品已启用了 "虚拟设计" 并已选择了相片。请打开 "虚拟设计" 进行修改`
+      })
     },
+
+    // // 跳转相关产品查看图片
+    // showProductImg (k) {
+    //   this.$router.push({ name: "selectedList", query: { id: k.goodsId } })
+    // },
 
     // 携带id 跳转虚拟设计页面
     virtualFun (val) {
-      console.log(val)
+      this.$emit("onPlist", val)
+      // 关闭弹窗
+      this.$emit("onClickShowModel")
     },
 
     // 标记说明
     linkFun (val) {
       console.log(val)
+    },
+
+    // 弹窗客人要求
+    showPopup () {
+      this.$emit("showPopup")
+      this.$emit("onClickShowModel")
     }
+
   },
   watch: {
     evnets: {
@@ -194,5 +226,20 @@ export default {
 .autoHiehgt{
   max-height:450px;
   overflow: auto;
+}
+.p-list-check{
+    .check{
+        display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: #2d8cf0;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 2px;
+    vertical-align: middle;
+    }
+    i{
+      color: #fff;
+    }
 }
 </style>

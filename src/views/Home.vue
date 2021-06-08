@@ -12,8 +12,8 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import { getChooseDetails } from '@/api/apiAll.js'
-import { parseUrl } from '@/util/util.js'
+import { getChooseDetails, getItemChooseSaleSumPrice, getCategoryId, categoryList } from '@/api/apiAll.js'
+import { parseUrl, formatDate } from '@/util/util.js'
 import checkHttpModal from "./checkHttp/checkHttpModal.vue"
 import tab from "./tab/tab.vue"
 export default {
@@ -43,8 +43,11 @@ export default {
       'mut_delImgs'
     ]),
     ...mapMutations('typeModule', [
-      'mut_allImg'
-
+      'mut_allImg',
+      'mut_jtotalPrice',
+      'mut_saleCategoryId',
+      'mut_pickList',
+      'mut_goodesList'
     ]),
 
     // 全部图片集合
@@ -76,7 +79,8 @@ export default {
     // 获取选片详情
     getChooseDetails (itemId) {
       getChooseDetails({ itemId }).then(res => {
-        let { orderItempProcessChooseGoodsVos, completeJson, bookCount, bottomCount, countBookCount, countBottomCount } = res.data
+        let { orderItempProcessChooseGoodsVos, completeJson, bookCount, bottomCount, countBookCount, countBottomCount, contactNames, orderNo, itemNo, financeId } = res.data
+        console.log(res.data)
         let json = {
           countNum: 0,
           countP: 0,
@@ -104,7 +108,35 @@ export default {
         // 选片信息
         if (completeJson) {
           completeJson = JSON.parse(completeJson)
-          picGoods = [...completeJson.productList]
+          picGoods = []
+          orderItempProcessChooseGoodsVos.map(item => {
+            completeJson.productList.map(_ => {
+              if (item.itemGoodsId === _.itemGoodsId) {
+                let json = {
+                  ..._,
+                  salePrice: item.salePrice, // 销售价格
+                  countNum: item.countNum, // 总数量
+                  remark: item.remark, // 备注
+                  pSalePrice: item.pSalePrice, // P销售价格
+                  isInputPNum: false, // 修改p数量
+                  isInputNum: false, // 修改数量
+                  isBeizhu: false, // 修改备注
+                  goodsStatus: item.goodsStatus, // 商品状态
+                  pickupModeCategoryId: [item.pickupModeCategoryId] || '' // 更新id
+                }
+                if (item.expeditedTime) {
+                  if (item.expeditedTime.toString().length === 10) {
+                    json.expeditedTime = formatDate(item.expeditedTime * 1000)
+                  } else {
+                    json.expeditedTime = formatDate(item.expeditedTime)
+                  }
+                } else {
+                  json.expeditedTime = ''
+                }
+                picGoods.push(json)
+              }
+            })
+          })
           delImgs = completeJson.delImgs
           let lodArr = [picGoods.pop(), picGoods.pop()]
           // 循环过滤新增商品
@@ -119,10 +151,30 @@ export default {
               itemGoodsId: item.itemGoodsId, // 商品唯一编号
               name: item.name, // 商品名字
               goodsId: item.goodsId, // 商品id
-              countP: item.countP // 默认p的数量
+              countP: item.countP, // 默认p的数量
+              salePrice: item.salePrice, // 销售价格
+              countNum: item.countNum, // 总数量
+              remark: item.remark, // 备注
+              pSalePrice: item.pSalePrice, // P销售价格
+              isInputPNum: false, // 修改p数量
+              isInputNum: false, // 修改数量
+              isBeizhu: false, // 修改备注
+              goodsStatus: item.goodsStatus, // 商品状态
+              pickupModeCategoryId: [item.pickupModeCategoryId] || '' // 更新id
+            }
+            // 加急时间
+            if (item.expeditedTime) {
+              if (item.expeditedTime.toString().length === 10) {
+                goodsJson.expeditedTime = formatDate(item.expeditedTime * 1000)
+              } else {
+                goodsJson.expeditedTime = formatDate(item.expeditedTime)
+              }
+            } else {
+              goodsJson.expeditedTime = ''
             }
             picGoods.push(goodsJson)
           })
+
           picGoods.push(...lodArr)
         } else {
           orderItempProcessChooseGoodsVos.map(item => {
@@ -133,24 +185,94 @@ export default {
               itemGoodsId: item.itemGoodsId, // 商品唯一编号
               name: item.name, // 商品名字
               goodsId: item.goodsId, // 商品id
-              countP: item.countP // 默认p的数量
+              countP: item.countP, // 默认p的数量
+              salePrice: item.salePrice, // 销售价格
+              countNum: item.countNum, // 总数量
+              remark: item.remark, // 备注
+              pSalePrice: item.pSalePrice, // P销售价格
+              isInputPNum: false, // 修改p数量
+              isInputNum: false, // 修改数量
+              isBeizhu: false, // 修改备注
+              goodsStatus: item.goodsStatus, // 商品状态
+              pickupModeCategoryId: [item.pickupModeCategoryId] || '' // 更新id
+            }
+            // 加急时间
+            if (item.expeditedTime) {
+              if (item.expeditedTime.toString().length === 10) {
+                goodsJson.expeditedTime = formatDate(item.expeditedTime * 1000)
+              } else {
+                goodsJson.expeditedTime = formatDate(item.expeditedTime)
+              }
+            } else {
+              goodsJson.expeditedTime = ''
             }
             picGoods.push(goodsJson)
           })
           picGoods.push(...picGoodsTow)
         }
+        // 过滤删除的商品
+        picGoods = picGoods.filter(item => item.goodsStatus === 'NORMAL')
         // 存储勾选商品信息
         this.mut_picGoods(picGoods)
 
         // 存储删除信息
         this.mut_delImgs(delImgs)
-        // console.log(orderItempProcessChooseGoodsVos, picGoods, completeJson)
+        console.log(orderItempProcessChooseGoodsVos, picGoods, completeJson)
 
         // 存储选片详情
-        let ditelJson = { bookCount, bottomCount, countBookCount, countBottomCount }
+        let ditelJson = { bookCount, bottomCount, countBookCount, countBottomCount, contactNames: contactNames[0], orderNo, itemNo, financeId }
         this.mut_details(ditelJson)
       }).catch(err => {
         console.log(`获取选片详情:`, err)
+      })
+    },
+
+    // 获取加挑信息
+    getItemChooseSaleSumPrice (itemId) {
+      getItemChooseSaleSumPrice({ itemId }).then(res => {
+        this.mut_jtotalPrice(res.data)
+      })
+    },
+
+    // 获取选片师类别
+    getCategoryId () {
+      const params = {
+        categoryType: 'SALES_NAME',
+        name: '选片师二销'
+      }
+      getCategoryId(params).then(res => {
+        this.mut_saleCategoryId(res.data)
+      })
+    },
+
+    // 取件方式
+    categoryList (t) {
+      let parmas = {
+        compare: "",
+        id: "",
+        idisCategoryMenu: "",
+        level: "",
+        parentId: "",
+        type: t
+      }
+      categoryList(parmas).then(res => {
+        console.log(res.data)
+        this.mut_pickList(res.data)
+      })
+    },
+    // 商品类别
+    goodsCategoryList (t) {
+      let parmas = {
+        compare: "",
+        id: "",
+        idisCategoryMenu: "",
+        level: "",
+        parentId: "",
+        type: t
+      }
+      categoryList(parmas).then(res => {
+        console.log(res.data)
+        this.mut_goodesList(res.data)
       })
     }
 
@@ -165,6 +287,15 @@ export default {
       // 获取选片详情
       this.getChooseDetails(this.get_parseUrl.itemId)
     }
+
+    // 获取加挑信息
+    this.getItemChooseSaleSumPrice(this.get_parseUrl.itemId)
+    // 获取选片师类别
+    this.getCategoryId()
+    // 取件方式
+    this.categoryList("PICKUP_METHOD")
+    // 商品类别
+    this.goodsCategoryList("GOODS")
   }
 }
 </script>

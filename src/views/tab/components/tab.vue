@@ -80,13 +80,6 @@ export default {
     onClickTab (val, title) {
       if (val === 2) {
         this.popup = true
-        this.$nextTick(() => {
-          let modal = this.$refs['right-el-modals'].$el
-          // // let div = modal.querySelector('.ivu-modal')
-          // div.style.position = 'absolute'
-          // div.style.left = '340px'
-          // div.style.top = '80px'
-        })
       } else {
         this.popup = false
       }

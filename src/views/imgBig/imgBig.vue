@@ -18,8 +18,8 @@
         </div>
 
         <!-- 右键弹窗 -->
-        <div>
-          <rightModel :evnets="evnets" v-if="showRightModel" @goodsChange="goodsChange"/>
+        <div id="big">
+          <rightModel :evnets="evnets" v-if="showRightModel" @goodsChange="goodsChange" v-on="$listeners"/>
         </div>
 
         <!-- 侧边详细信息 -->
@@ -205,6 +205,11 @@ export default {
         this.myViewer.update()
         this.loading = false
       }, 1000)
+    },
+
+    // 隐藏
+    delBigImg () {
+      console.log(this.myViewer.hidden())
     }
   },
   mounted () {
