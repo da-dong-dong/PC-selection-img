@@ -2,7 +2,7 @@
 <template>
     <div>
         <div class="img-box" @contextmenu.prevent="OnRightModel($event, item)" @dblclick="onClickDB()">
-            <div>
+            <div :class="get_cacheFileCheck?'CacheFile':''">
                 <img :src="imgF2ShowUrl" alt="" v-if="get_imgF2Show">
                 <img v-else v-lazy="item.url" alt="" />
             </div>
@@ -20,7 +20,8 @@ export default {
   props: ["item"],
   computed: {
     ...mapGetters("typeModule", [
-      "get_imgF2Show"
+      "get_imgF2Show",
+      "get_cacheFileCheck"
     ])
 
   },
@@ -46,6 +47,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+ .CacheFile{
+    width: 70%;
+    margin: 0 auto;
+  }
 .selected-item {
   .img-box {
     transition: all 0.5s;

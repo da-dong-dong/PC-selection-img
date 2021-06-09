@@ -1,5 +1,5 @@
 import baseUrl from '@/api/index.js'
-import { get, put, postFormHeader, putJson, post, del } from '@/api/axios.js'
+import { get, put, postFormHeader, putJson, post, del, postFormHeaderFroder } from '@/api/axios.js'
 import { head } from '@/api/axios1.js'
 
 // 获取-相片服务器列表
@@ -80,4 +80,24 @@ export const upChildOrderGrade = (params) => {
 // 删除子订单列表
 export const delChildOrder = (params) => {
   return del(baseUrl.delChildOrder, params)
+}
+
+// 查找-打印模板名称列表
+export const getTemList = (params) => {
+  return get(baseUrl.getTemList, params)
+}
+
+// 查找-打印模板渲染
+export const getPrintOut = (params) => {
+  return post(baseUrl.getPrintOut, params)
+}
+
+// 查找-订单日志列表
+export const getLogs = (params) => {
+  return get(baseUrl.getLogs, params)
+}
+
+// 标记说明
+export const uploadFile2 = (params) => {
+  return postFormHeaderFroder(`${params.url}${baseUrl.uploadFile2}`, params.form, params.headers)
 }

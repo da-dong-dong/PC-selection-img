@@ -25,7 +25,9 @@ export default {
     ...mapGetters('app', [
       'get_parseUrl',
       'get_picGoods',
-      'get_delImgs'
+      'get_delImgs',
+      'get_record',
+      'get_details'
     ])
   },
   data () {
@@ -40,7 +42,8 @@ export default {
       'mut_setParseUrl',
       'mut_picGoods',
       'mut_details',
-      'mut_delImgs'
+      'mut_delImgs',
+      'mut_record'
     ]),
     ...mapMutations('typeModule', [
       'mut_allImg',
@@ -79,7 +82,7 @@ export default {
     // 获取选片详情
     getChooseDetails (itemId) {
       getChooseDetails({ itemId }).then(res => {
-        let { orderItempProcessChooseGoodsVos, completeJson, bookCount, bottomCount, countBookCount, countBottomCount, contactNames, orderNo, itemNo, financeId } = res.data
+        let { orderItempProcessChooseGoodsVos, completeJson, bookCount, bottomCount, countBookCount, countBottomCount, contactNames, orderNo, itemNo, financeId, orderId } = res.data
         console.log(res.data)
         let json = {
           countNum: 0,
@@ -107,7 +110,8 @@ export default {
         picGoodsTow[1].itemGoodsId = -2
         // 选片信息
         if (completeJson) {
-          completeJson = JSON.parse(completeJson)
+          // 判断是否使用选片记录
+          completeJson = this.get_record ? this.get_record : JSON.parse(completeJson)
           picGoods = []
           orderItempProcessChooseGoodsVos.map(item => {
             completeJson.productList.map(_ => {
@@ -220,8 +224,11 @@ export default {
         console.log(orderItempProcessChooseGoodsVos, picGoods, completeJson)
 
         // 存储选片详情
-        let ditelJson = { bookCount, bottomCount, countBookCount, countBottomCount, contactNames: contactNames[0], orderNo, itemNo, financeId }
+        let ditelJson = { bookCount, bottomCount, countBookCount, countBottomCount, contactNames: contactNames[0], orderNo, itemNo, financeId, orderId }
         this.mut_details(ditelJson)
+
+        // 清除缓存记录
+        this.mut_record('')
       }).catch(err => {
         console.log(`获取选片详情:`, err)
       })
@@ -288,6 +295,11 @@ export default {
       this.getChooseDetails(this.get_parseUrl.itemId)
     }
 
+    // 是否使用缓存记录
+    if (this.get_record) {
+      this.getChooseDetails(this.get_parseUrl.itemId)
+    }
+
     // 获取加挑信息
     this.getItemChooseSaleSumPrice(this.get_parseUrl.itemId)
     // 获取选片师类别
@@ -296,6 +308,10 @@ export default {
     this.categoryList("PICKUP_METHOD")
     // 商品类别
     this.goodsCategoryList("GOODS")
+    // 查找是否有缓存图片
+    if (window.MainWindow) {
+      window.MainWindow.fsSlectImg(this.get_details.orderNo)
+    }
   }
 }
 </script>

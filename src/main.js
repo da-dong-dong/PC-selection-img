@@ -12,7 +12,12 @@ import VueDND from 'awe-dnd' // 拖拽
 import VueLazyload from 'vue-lazyload'
 import 'viewerjs/dist/viewer.css' // 大图样式
 import Viewer from 'v-viewer'
+import Print from 'vue-print-nb' // 打印
+import 'vue-fabric/dist/vue-fabric.min.css'
+import { Fabric } from 'vue-fabric' // ps
 
+Vue.use(Print)
+Vue.use(Fabric)
 Vue.use(Viewer)
 Vue.use(vueDragSelectPro)
 Vue.use(VueDND)

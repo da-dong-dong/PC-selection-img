@@ -75,3 +75,6 @@ export const postForm = (url, params) => {
 export const postFormHeader = (url, params, headers) => {
   return myAxios.post(url, qs.stringify(params), { headers })
 }
+export const postFormHeaderFroder = (url, params, headers) => {
+  return myAxios.post(url, params, { headers })
+}

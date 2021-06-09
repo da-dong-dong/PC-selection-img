@@ -6,7 +6,7 @@
         <div id="allImgs" >
             <ul style="display:none">
                 <li v-for="(item,index) in get_allImg" :key="index" >
-                    <img :src="item.url+'&size=s'" class="img">
+                    <img  :src="item.url + `${CacheFile && get_cacheFileCheck?'':'&size=s'}`"  class="img">
                 </li>
             </ul>
         </div>
@@ -53,8 +53,8 @@ export default {
   },
   computed: {
     ...mapGetters('typeModule', [
-      'get_allImg'
-
+      'get_allImg',
+      "get_cacheFileCheck"
     ]),
     ...mapGetters("app", [
       "get_picGoods",
@@ -73,6 +73,7 @@ export default {
         backdrop: false,
         button: true
       },
+      CacheFile: null, //
       index: 0, // 当前索引
       allImgLength: 0, // 全部图长度
       evnets: null, // 当前事件
@@ -213,6 +214,7 @@ export default {
     }
   },
   mounted () {
+    this.CacheFile = window.MainWindow
     this.allImgLength = this.get_allImg.length
     this.$nextTick(() => {
       this.myViewer = new Viewer(document.getElementById('allImgs'), {

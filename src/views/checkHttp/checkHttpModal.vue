@@ -30,7 +30,8 @@ import { sha1 } from '@/util/util.js'
 export default {
   computed: {
     ...mapGetters('app', [
-      'get_parseUrl'
+      'get_parseUrl',
+      'get_details'
     ]),
     ...mapGetters('typeModule', [
       'get_cacheFileCheck'
@@ -58,7 +59,9 @@ export default {
     ]),
     ...mapMutations('typeModule', [
       'mut_setCacheFileCheck',
-      'mut_moduleFlge'
+      'mut_moduleFlge',
+      'mut_appKeyServe',
+      'mut_appServeURL'
     ]),
 
     // 获取相片服务器
@@ -189,6 +192,8 @@ export default {
         params,
         headers
       }
+      this.mut_appKeyServe(this.picServerList[this.serverVal].serverKey)
+      this.mut_appServeURL(this.checkHttpUrl)
       return new Promise((resolve, reject) => {
         getAllPic(json).then((res) => {
           resolve(res.data)
@@ -241,6 +246,7 @@ export default {
 
     // 确认选片
     async onClickList (type) {
+      this.offImg = true
       // 模式选择
       this.mut_moduleFlge(type)
 
@@ -252,21 +258,46 @@ export default {
         this.onClickChangeErr()
         return
       }
-
       if (type === 1) this.updateCloudChooseType(this.get_parseUrl.itemId)
 
       // 生成url
-      arrImg = arrImg.map(item => {
-        let str = item.slice(item.lastIndexOf(`${this.photoServerJson.itemNo}\\`) + 1 + this.photoServerJson.itemNo.length)
-        let json = {
-          id: str,
-          url: `${this.checkHttpUrl}/fserver/iDownloadFile?keypath=${item}`,
-          name: str.slice(str.lastIndexOf(`\\`) + 1)
+      // 判断是否使用缓存
+      if (this.CacheFileShow) {
+        let list = []
+        let { itemNo, orderNo } = this.get_details
+        let typeImg = { 0: '原片', 1: '初修片', 3: '精修片', 4: '设计片' }
+        let title = `${Number(orderNo)}(${typeImg[this.selectTypeVal]})`
+        let fsAllimg = window.MainWindow.fsAllimg
+        // 循环找出title
+        let cacheFileImgSelect = fsAllimg.filter(item => item.title === title)
+        let cacheFileImg = []
+        if (cacheFileImgSelect.length > 0) {
+          cacheFileImg = cacheFileImgSelect[0].fileArr
         }
+        for (let i = 0; i < cacheFileImg.length; i++) {
+          let str = cacheFileImg[i].slice(
+            cacheFileImg[i].lastIndexOf(`${itemNo}/`) + 1 + itemNo.length
+          )
+          let obj = {
+            id: str,
+            name: str.slice(str.lastIndexOf(`/`) + 1),
+            url: `${cacheFileImg[i]}`
+          }
+          list.push(obj)
+        }
+        arrImg = list
+      } else {
+        arrImg = arrImg.map(item => {
+          let str = item.slice(item.lastIndexOf(`${this.photoServerJson.itemNo}\\`) + 1 + this.photoServerJson.itemNo.length)
+          let json = {
+            id: str,
+            url: `${this.checkHttpUrl}/fserver/iDownloadFile?keypath=${item}`,
+            name: str.slice(str.lastIndexOf(`\\`) + 1)
+          }
 
-        return json
-      })
-
+          return json
+        })
+      }
       this.$emit("httpAllImg", arrImg)
     }
   },

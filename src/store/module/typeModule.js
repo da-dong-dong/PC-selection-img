@@ -9,7 +9,9 @@ export default {
     jtotalPrice: 0, // 加挑金额
     saleCategoryId: null, // 选片师类别
     pickList: [], // 取件方式
-    goodesList: [] // 商品类别
+    goodesList: [], // 商品类别
+    appKeyServe: '', // 服务器key
+    appServeURL: '' // 服务器url
 
   },
   getters: {
@@ -20,7 +22,9 @@ export default {
     get_jtotalPrice: state => state.jtotalPrice,
     get_saleCategoryId: state => state.saleCategoryId,
     get_pickList: state => state.pickList,
-    get_goodesList: state => state.goodesList
+    get_goodesList: state => state.goodesList,
+    get_appKeyServe: state => state.appKeyServe,
+    get_appServeURL: state => state.appServeURL
   },
   mutations: {
     // 设置展示缓存
@@ -84,6 +88,15 @@ export default {
     // 商品类别
     mut_goodesList (state, data) {
       state.goodesList = data
+    },
+
+    // 服务器key
+    mut_appKeyServe (state, data) {
+      state.appKeyServe = data
+    },
+    // 服务器url
+    mut_appServeURL (state, data) {
+      state.appServeURL = data
     }
 
   },

@@ -31,7 +31,7 @@
                     <span class="shuoming" >
                         <span v-if="item.p_img_count >= 1">标记说明</span>
                         <span v-else-if="get_moduleFlge==2" class="s" style="cursor: not-allowed;">标记说明</span>
-                        <span v-else class="s" @click="linkFun">标记说明</span>
+                        <span v-else class="s" @click="linkFun(item)">标记说明</span>
                     </span>
 
                     </li>
@@ -130,7 +130,7 @@ export default {
 
     // 标记说明
     linkFun (val) {
-      console.log(val)
+      this.$emit("onClickPS", val)
     },
 
     // 弹窗客人要求

@@ -6,7 +6,8 @@ export default {
     delImgs: [], // 删除图片
     photoInstructions: {}, // 客人要求
     customerInstructions: '', // 客户要求
-    details: {} // 选片详情
+    details: {}, // 选片详情
+    record: '' // 选片记录
 
   },
   getters: {
@@ -15,8 +16,8 @@ export default {
     get_delImgs: state => state.delImgs,
     get_photoInstructions: state => state.photoInstructions,
     get_customerInstructions: state => state.customerInstructions,
-    get_details: state => state.details
-
+    get_details: state => state.details,
+    get_record: state => state.record
   },
   mutations: {
     // 设置url参数值
@@ -47,6 +48,11 @@ export default {
     // 详情信息
     mut_details (state, data) {
       state.details = data
+    },
+
+    // 选片记录
+    mut_record (state, data) {
+      state.record = data
     }
 
   },

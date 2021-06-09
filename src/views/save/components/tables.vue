@@ -539,7 +539,7 @@ export default {
           }
         }
         if (len <= 0) {
-          reject('数据错误')
+          // reject('数据错误')
         }
       })
     },
@@ -799,8 +799,6 @@ export default {
     line-height: 26px;
     cursor: pointer;
     padding: 0 10px;
-    .name {
-    }
     .num {
       float: right;
     }
