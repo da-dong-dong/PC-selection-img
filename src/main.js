@@ -16,6 +16,9 @@ import Print from 'vue-print-nb' // 打印
 import 'vue-fabric/dist/vue-fabric.min.css'
 import { Fabric } from 'vue-fabric' // ps
 
+import common from './util/common'
+Vue.prototype.common = common
+
 Vue.use(Print)
 Vue.use(Fabric)
 Vue.use(Viewer)

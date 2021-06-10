@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="index-top-menu">
-      <span class="index-logo-title" v-once @click="gotoHome">利亚方舟智能确认设计系统</span>
+      <span class="index-logo-title" v-once @click="gotoHome">利亚方舟智能确认设计系统aaaa</span>
       <ul class="d-flex index-menu-list">
         <li v-for="(k, i) in list" :key="i" class="indexli" :class="{'indexActive': isIndexActive==i}" @click="handleClick(k,i)">
           <div class="icon-img">
-              <i class="iconfont" :class="k.iconName" :style="`${k.style}`" ></i>
+            <Icon :type="k.iconName" />
             </div>
             <div class="name" v-once>{{k.title}}</div>
         </li>
@@ -27,7 +27,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-quanbu",
+          iconName: "logo-windows",
           moduleId: "1",
           children: []
         },
@@ -37,7 +37,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-xuanzhong",
+          iconName: "ios-checkmark-circle",
           moduleId: "1",
           children: []
         },
@@ -47,7 +47,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-weixuanzhong1",
+          iconName: "ios-create",
           moduleId: "1",
           children: []
         },
@@ -57,7 +57,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-tupian_shanchu",
+          iconName: "md-eye-off",
           moduleId: "1",
           children: []
         },
@@ -77,7 +77,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-quanping",
+          iconName: "md-contract",
           moduleId: "1",
           children: []
         },
@@ -87,7 +87,7 @@ export default {
           isActive: false,
           style: 'color:#ffffff',
           isShow: true,
-          iconName: "icon-166991",
+          iconName: "md-document",
           moduleId: "1",
           children: []
         }

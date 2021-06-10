@@ -101,3 +101,18 @@ export const getLogs = (params) => {
 export const uploadFile2 = (params) => {
   return postFormHeaderFroder(`${params.url}${baseUrl.uploadFile2}`, params.form, params.headers)
 }
+
+// 查找-设计看版详情
+export const getDesignList = (params) => {
+  return get(baseUrl.getDesignList, params)
+}
+
+// 查找-子订单商品列表
+export const getListUsing = (params) => {
+  return get(baseUrl.getListUsing, params)
+}
+
+// 子订单产品升级
+export const updateDegign = (params) => {
+  return put(baseUrl.updateDegign, params)
+}

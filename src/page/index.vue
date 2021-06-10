@@ -149,6 +149,8 @@ import imgViewer from "@/components/indexComponents/index-img-viewer/index-img-v
 import bus from "@/util/bus"
 import { mapGetters, mapMutations } from "vuex"
 import ps from "@/components/ps"
+import { isIntranetAvailable, getAllPic, getPicConfigList, getDesignList, getListUsing, updateDegign } from '@/api/apiAll.js'
+import { sha1 } from '@/util/util.js'
 export default {
   components: {
     indexMenu,
@@ -445,25 +447,21 @@ export default {
      */
     getServerList () {
       return new Promise((resolve, reject) => {
-        this.ajax.getConfigList({
-          data: {},
-          success: (res) => {
-            console.log("获取服务器")
-            console.log(res)
-            this.serverArr = res.data
-            if (this.serverArr.length >= 1) {
-              this.selectServer = this.serverArr[0].id
-              this.currentSelectServer = this.serverArr[0]
-              sessionStorage.setItem("B", this.serverArr[0].serverKey)
-            } else {
-              this.$Message.error("暂无服务器~~")
-            }
-            this.set_ky_serveArr(res.data) // 把服务器列表存到vuex;
-            resolve()
-          },
-          error: (e) => {
-            this.$Message.error("获取服务器失败" + e.msg)
+        getPicConfigList().then(res => {
+          console.log("获取服务器")
+          console.log(res)
+          this.serverArr = res.data
+          if (this.serverArr.length >= 1) {
+            this.selectServer = this.serverArr[0].id
+            this.currentSelectServer = this.serverArr[0]
+            sessionStorage.setItem("B", this.serverArr[0].serverKey)
+          } else {
+            this.$Message.error("暂无服务器~~")
           }
+          this.set_ky_serveArr(res.data) // 把服务器列表存到vuex;
+          resolve()
+        }).catch((e) => {
+          this.$Message.error("获取服务器失败" + e.msg)
         })
       })
     },
@@ -473,14 +471,10 @@ export default {
      */
     isUrlAvailable (url) {
       return new Promise((resolve, reject) => {
-        this.ajax.isIntranetAvailable({
-          data: { url: url },
-          success: (res) => {
-            resolve(true)
-          },
-          error: (res) => {
-            resolve(false)
-          }
+        isIntranetAvailable(url).then(() => {
+          resolve(true)
+        }).catch(() => {
+          resolve(false)
         })
       })
     },
@@ -497,136 +491,125 @@ export default {
      */
     getImg (obj) {
       return new Promise((resolve, reject) => {
-        this.ajax.getAllPhotoDesign(
-          {
-            data: {
-              OrderNumber: this.designListObj.orderNo,
-              SubOrderNumber: this.designListObj.itemNo,
-              ImportType: 4,
-              recursive: 1,
-              searchPattern: "JPG"
-            },
-            success: (res) => {
-              console.log("获取图片列表res~~")
-              console.log(res)
-              let arr = []
-              let photoArr = []
-              let itemNo = this.designListObj.itemNo
-              // let obj={
-              //   general_require:"",
-              //   last_modify_time:"",
-              //   order_status:1,
-              //   PhotoLookDesign:[
-              //   {
-              //   photoName:"001.jpg",
-              //   modify:1,
-              //   modify_note:""
-              //   }]
-              // }
-              // console.log(obj);
-              // this.set_ky_lookArr(this.obj.PhotoLookDesign);
-              // 最终要提交的数据；
-              // order_status:1选片完成，0表示未选片；
-              // last_modify_time：当前的时间（时间戳）
-              // modify 1表示不需要修改，modify_note不需要填写
-              // modify 2表示需要修改，modify_note为修改要求内容
-              // modify 3表示删除的图片，modify_note不需要填写
-              arr = res.data
-              this.obj1 = {
-                title: "确认ok!",
-                name: "ok",
-                isSelected: true,
-                num: [],
-                disabled: true,
-                biaoji: true
-              }
-              this.obj2 = {
-                title: "待修改",
-                name: "modify",
-                isSelected: false,
-                num: [],
-                disabled: false,
-                biaoji: true
-              }
-              arr.forEach((k) => {
-                let str = k.slice(k.lastIndexOf(`${itemNo}\\`) + 1 + itemNo.length)
-                this.obj4 = {
-                  isModify: false,
-                  photoName: [str.slice(str.lastIndexOf(`\\`) + 1)],
-                  modify_note: "",
-                  modify: 1,
-                  photoNames: [],
-                  p: 0,
-                  photoIds: [],
-                  status: 0,
-                  id: str,
-                  url: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}`,
-                  thumbnail: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}${window.MainWindow && this.getCacheFileShow ? '' : '&size=s'}`,
-                  source: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}&size=p`
-                }
-                this.list3.push(this.obj4)
-              })
-              if (this.imgList.length == 0) {
-                console.log("执行了这里")
-                this.list4.push(this.obj1, this.obj2)
-                this.set_ky_imgList(this.list3) // 存到vuex中去
-                this.set_ky_lookArr(this.list4)
-                this.$router.push({ name: "indexAllImg" }).catch(() => {})
-              } else {
-                console.log("8888888888")
-                console.log(this.imgList, this.list3)
-                this.list3.forEach((k) => {
-                  this.imgList.forEach((k2) => {
-                    if (k.id == k2.photoName) {
-                      k.modify = k2.modify
-                      k.modify_note = k2.modify_note
-                    }
-                  })
-                })
-                this.okArr = this.list3.filter((k) => {
-                  return k.modify == 1
-                })
-                this.modifyArr = this.list3.filter((k) => {
-                  return k.modify == 2
-                })
-                this.delArr = this.list3.filter((k) => {
-                  return k.modify == 3
-                })
-                photoArr = this.list3.filter((k) => {
-                  return k.modify == 1 || k.modify == 2
-                })
-                this.list3.forEach((k) => {
-                  if (k.modify == 1) {
-                    this.obj1.num.push(k.url)
-                    Array.from(new Set(this.obj1.num))
-                  }
-                  if (k.modify == 2) {
-                    this.obj2.num.push(k.url)
-                    Array.from(new Set(this.obj2.num))
-                    k.photoNames.push(this.obj2.title)
-                    Array.from(new Set(k.photoNames))
-                  }
-                })
-                this.list4.push(this.obj1, this.obj2)
-                this.set_ky_lookArr(this.list4)
-                sessionStorage.setItem("ky_design", "1")
-                sessionStorage.setItem("ky_lookArr", JSON.stringify(this.list4))
-                sessionStorage.setItem("ky_imgList", JSON.stringify(photoArr))
-                this.set_ky_photoList(photoArr)
-                this.set_ky_imgList(photoArr) // 存到vuex中去
-                this.set_ky_okArr(this.okArr)
-                this.set_ky_modifyArr(this.modifyArr)
-                this.set_ky_delArr(this.delArr)
-                this.$router.push({ name: "indexAllImg" }).catch(() => {})
-              }
-            },
-            error: (e) => {
-              console.log("e")
-              console.log(e)
+        let newData = new Date().getTime()
+        let nonce = Math.floor(Math.random(1) * 10000)
+        let sha1s = sha1(`lyfz.net${newData}${nonce}`)
+        let headers = {
+          signature: sha1s,
+          timestamp: newData,
+          nonce: nonce,
+          app_key: sessionStorage.getItem('B'),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        let params = {
+          OrderNumber: this.designListObj.orderNo,
+          SubOrderNumber: this.designListObj.itemNo,
+          ImportType: 4,
+          recursive: 1,
+          searchPattern: "JPG"
+        }
+        let json = {
+          url: sessionStorage.getItem('A'),
+          params,
+          headers
+        }
+        getAllPic(json).then((res) => {
+          console.log("获取图片列表res~~")
+          console.log(res)
+          let arr = []
+          let photoArr = []
+          let itemNo = this.designListObj.itemNo
+          arr = res.data
+          this.obj1 = {
+            title: "确认ok!",
+            name: "ok",
+            isSelected: true,
+            num: [],
+            disabled: true,
+            biaoji: true
+          }
+          this.obj2 = {
+            title: "待修改",
+            name: "modify",
+            isSelected: false,
+            num: [],
+            disabled: false,
+            biaoji: true
+          }
+          arr.forEach((k) => {
+            let str = k.slice(k.lastIndexOf(`${itemNo}\\`) + 1 + itemNo.length)
+            this.obj4 = {
+              isModify: false,
+              photoName: [str.slice(str.lastIndexOf(`\\`) + 1)],
+              modify_note: "",
+              modify: 1,
+              photoNames: [],
+              p: 0,
+              photoIds: [],
+              status: 0,
+              id: str,
+              url: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}`,
+              thumbnail: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}${window.MainWindow && this.getCacheFileShow ? '' : '&size=s'}`,
+              source: `${this.ky_photoUrl}/fserver/iDownloadFile?keypath=${k}&size=p`
             }
-          },
-          { serverKey: this.serverArr.serverKey }
-        )
+            this.list3.push(this.obj4)
+          })
+          if (this.imgList.length == 0) {
+            console.log("执行了这里")
+            this.list4.push(this.obj1, this.obj2)
+            this.set_ky_imgList(this.list3) // 存到vuex中去
+            this.set_ky_lookArr(this.list4)
+            this.$router.push({ name: "indexAllImg" }).catch(() => {})
+          } else {
+            console.log("8888888888")
+            console.log(this.imgList, this.list3)
+            this.list3.forEach((k) => {
+              this.imgList.forEach((k2) => {
+                if (k.id == k2.photoName) {
+                  k.modify = k2.modify
+                  k.modify_note = k2.modify_note
+                }
+              })
+            })
+            this.okArr = this.list3.filter((k) => {
+              return k.modify == 1
+            })
+            this.modifyArr = this.list3.filter((k) => {
+              return k.modify == 2
+            })
+            this.delArr = this.list3.filter((k) => {
+              return k.modify == 3
+            })
+            photoArr = this.list3.filter((k) => {
+              return k.modify == 1 || k.modify == 2
+            })
+            this.list3.forEach((k) => {
+              if (k.modify == 1) {
+                this.obj1.num.push(k.url)
+                Array.from(new Set(this.obj1.num))
+              }
+              if (k.modify == 2) {
+                this.obj2.num.push(k.url)
+                Array.from(new Set(this.obj2.num))
+                k.photoNames.push(this.obj2.title)
+                Array.from(new Set(k.photoNames))
+              }
+            })
+            this.list4.push(this.obj1, this.obj2)
+            this.set_ky_lookArr(this.list4)
+            sessionStorage.setItem("ky_design", "1")
+            sessionStorage.setItem("ky_lookArr", JSON.stringify(this.list4))
+            sessionStorage.setItem("ky_imgList", JSON.stringify(photoArr))
+            this.set_ky_photoList(photoArr)
+            this.set_ky_imgList(photoArr) // 存到vuex中去
+            this.set_ky_okArr(this.okArr)
+            this.set_ky_modifyArr(this.modifyArr)
+            this.set_ky_delArr(this.delArr)
+            this.$router.push({ name: "indexAllImg" }).catch(() => {})
+          }
+        }).catch(() => {
+          resolve([])
+        })
       })
     },
     /**
@@ -636,15 +619,14 @@ export default {
       const params = {
         itemId: Number(sessionStorage.getItem('kyitemId'))
       }
-      return this.ajax
-        .getDesignList(params)
+      return getDesignList(params)
         .then((res) => {
           console.log("查找，设计看板详情~~")
           console.log(res)
           let arr = []
-          console.log(JSON.parse(res.data.data.designJson))
-          this.designListObj = res.data.data
-          this.designJson = JSON.parse(res.data.data.designJson)
+          console.log(JSON.parse(res.data.designJson))
+          this.designListObj = res.data
+          this.designJson = JSON.parse(res.data.designJson)
           console.log("designJson ---------------------------")
           this.photolookDesign = this.designJson.PhotoLookDesign
           let newObj = this.designJson
@@ -707,8 +689,8 @@ export default {
 
           this.textareaNote = newObj.customerInstructions // 客户要求
           this.textareaPhone = newObj.photoInstructions // 相片说明
-          this.designListObj = res.data.data
-          sessionStorage.setItem("ky_designList", JSON.stringify(res.data.data))
+          this.designListObj = res.data
+          sessionStorage.setItem("ky_designList", JSON.stringify(res.data))
         })
         .catch((e) => {
           this.$Message.warning(`${e.message}`)
@@ -802,8 +784,7 @@ export default {
         processStatus: this.formItem.select
       }
       console.log(params)
-      return this.ajax
-        .updateDegign(params)
+      return updateDegign(params)
         .then((res) => {
           console.log("更新，设计看版详情~~")
           console.log(res)
@@ -901,13 +882,12 @@ export default {
       const params = {
         itemId: sessionStorage.getItem('kyitemId')
       }
-      return this.ajax
-        .getListUsing(params)
+      return getListUsing(params)
         .then((res) => {
           console.log("获取表格数据")
           console.log(res)
           const that = this
-          this.ajaxtableData = res.data.data
+          this.ajaxtableData = res.data
           this.ajaxtableData = this.ajaxtableData.map((k) => {
             return {
               countNum: k.countNum,
@@ -935,7 +915,7 @@ export default {
               k.expeditedTime = this.common.formatDate(k.expeditedTime)
             }
           })
-          this.dataTotal = res.data.data.length // 分页总数，共多少条
+          this.dataTotal = res.data.length // 分页总数，共多少条
           if (this.ajaxtableData.length < this.pageSize) {
             this.tableData = this.ajaxtableData
           } else {
