@@ -48,7 +48,7 @@
                     <div class="save-form" style="margin: 0 5px 5px 10px">
                         <Form label-position="right" :label-width="80">
                             <FormItem label="客户要求">
-                                <Input :rows="2" type="textarea" v-model="get_customerInstructions" placeholder="请输入"/>
+                                <Input :rows="2" type="textarea" v-model="customerInstructions" placeholder="请输入"/>
                             </FormItem>
                         </Form>
                     </div>
@@ -103,6 +103,22 @@
                     <Button type="default" @click="showSave = false" style="margin-right:8px;">关闭</Button>
                     <Button type="primary" @click="recordClickFn">查看选片记录</Button>
                 </div>
+            </div>
+        </Modal>
+
+        <!--保存选片弹出模态框 start-->
+        <Modal v-model="popup15" width="400" class-name="vertical-center-modal">
+            <p slot="header" style="color:#fff"><span>选择选片状态</span></p>
+            <div style="margin-left:125px;padding-top:20px;padding-bottom:20px;">
+              <p>请选择选片状态</p>
+              <RadioGroup v-model="processStatuscode" vertical >
+                <Radio label="COMPLETE"><span>已选片</span></Radio>
+                <Radio label="PROCESSING"><span>选片中</span></Radio>
+                <Radio label="NOT_PROCESSING"><span>未选片</span></Radio>
+            </RadioGroup>
+            </div>
+            <div slot="footer">
+                <Button type="primary" :loading="modal_loading" @click="submitpopup15">确定并保存</Button>
             </div>
         </Modal>
 
@@ -176,7 +192,7 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import tables from "./components/tables.vue"
-import { addEntryReceipt, getItemChooseSaleSumPrice, getLogs } from '@/api/apiAll.js'
+import { addEntryReceipt, getItemChooseSaleSumPrice, getLogs, updateChooseDetails } from '@/api/apiAll.js'
 import printImg from "@/components/print-img"
 import printView from "@/components/print/index.vue"
 export default {
@@ -192,7 +208,9 @@ export default {
       'get_details',
       'get_customerInstructions',
       'get_photoInstructions',
-      'get_parseUrl'
+      'get_parseUrl',
+      'get_delImgs',
+      "get_picGoods"
     ]),
     jtotalPrice () {
       return this.get_jtotalPrice + this.addPrice
@@ -218,11 +236,15 @@ export default {
   },
   data () {
     return {
+      popup15: false, // 弹窗保存
+      processStatuscode: 'COMPLETE', // 弹窗保存状态
+      modal_loading: false, // 保存弹窗节流
       showSave: true, // 弹窗显示
       mailAddress: '', // 寄件地址
       qq: '', // QQ
       email: '', // 电子邮件
-      photoInstructions: '',
+      photoInstructions: '', // 相片说明
+      customerInstructions: '', // 客户要求
       statistics: {
         total: 0,
         bottomTotal: 0,
@@ -440,12 +462,51 @@ export default {
     // 保存选片弹出弹窗 start
     openpopup15 () {
       this.popup15 = true
+    },
+
+    // 保存数据
+    submitpopup15 () {
+      this.modal_loading = true
+      let delImgs = this.get_delImgs.map(item => item.id)
+      let productList = this.get_picGoods.map(item => {
+        let json = {
+          itemGoodsId: item.itemGoodsId,
+          goodsId: item.goodsId,
+          name: item.name,
+          countP: item.countP,
+          imgIds: item.imgIds,
+          p_list: item.p_list,
+          isVirtualDesign: item.isVirtualDesign
+        }
+        return json
+      })
+      let completeJson = {
+        customerInstructions: this.customerInstructions,
+        photoInstructions: this.photoInstructions,
+        delImgs,
+        productList
+      }
+      let params = {
+        completeJson: JSON.stringify(completeJson),
+        id: this.get_parseUrl.id,
+        itemId: this.get_parseUrl.itemId,
+        processStatus: this.processStatuscode,
+        shopId: this.get_parseUrl.shopId,
+        qq: this.qq || null,
+        email: this.email || null,
+        mailAddress: this.mailAddress || null
+      }
+      // console.log(completeJson, params)
+      updateChooseDetails(params).then(res => {
+        console.log(res)
+      })
     }
   },
   created () {
     for (let key in this.get_photoInstructions) {
       this.photoInstructions += `${key}:${this.get_photoInstructions[key]}\n`
     }
+    this.customerInstructions = this.get_customerInstructions
     // 计算已经选好
     let noSelectImgNum = 0
     let prtImgNum = 0

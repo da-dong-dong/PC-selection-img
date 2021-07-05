@@ -116,3 +116,8 @@ export const getListUsing = (params) => {
 export const updateDegign = (params) => {
   return put(baseUrl.updateDegign, params)
 }
+
+// 保存数据
+export const updateChooseDetails = (params) => {
+  return put(baseUrl.updateChooseDetails, params)
+}

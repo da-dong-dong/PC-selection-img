@@ -43,7 +43,9 @@ export default {
       'mut_picGoods',
       'mut_details',
       'mut_delImgs',
-      'mut_record'
+      'mut_record',
+      "mut_customerInstructions",
+      "mut_photoInstructions"
     ]),
     ...mapMutations('typeModule', [
       'mut_allImg',
@@ -226,6 +228,16 @@ export default {
         // 存储选片详情
         let ditelJson = { bookCount, bottomCount, countBookCount, countBottomCount, contactNames: contactNames[0], orderNo, itemNo, financeId, orderId }
         this.mut_details(ditelJson)
+
+        // 存储客户信息，相片备注
+        let getJsonPhone = {}
+        completeJson.photoInstructions.split("\n").map(item => item.split(":")).map(res1 => {
+          if (res1[0]) {
+            getJsonPhone[res1[0]] = res1[1]
+          }
+        })
+        this.mut_customerInstructions(completeJson.customerInstructions)
+        this.mut_photoInstructions(getJsonPhone)
 
         // 清除缓存记录
         this.mut_record('')

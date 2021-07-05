@@ -32,6 +32,7 @@ const baseUrl = {
   getTemList: `${baseApi}/store/print/template/list/printTemplateNameVo`, // 查找-打印模板名称列表
   getPrintOut: `${baseApi}/store/print/template/printOut`, // 查找-打印模板渲染
   getLogs: `${baseApi}/logs/logs/order/list`, // 查找-订单日志列表
+  updateChooseDetails: `${baseApi}/store/order/item/process/choose/update/details`, // 保存数据
   // ------------以下是设计版的------------------------------------
   getDesignList: `${baseApi}/store/order/item/process/dsign/details`, // 查找-设计看版详情
   getListUsing: `${baseApi}/store/order/item/goods/list`, // 查找-子订单商品列表
