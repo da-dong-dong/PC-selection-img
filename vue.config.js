@@ -2,6 +2,11 @@ const path = require('path')
 const resolve = dir => {
   return path.join(__dirname, dir)
 }
+// console.log(process.env.NODE_ENV, '66666666666666666', process.env.outputDir)
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? '/'
+  : '/'
+
 module.exports = {
   // 选项
 
@@ -9,7 +14,7 @@ module.exports = {
   publicPath: './',
 
   // 构建时的输出目录
-  outputDir: 'dist',
+  outputDir: process.env.outputDir,
 
   // 放置静态资源的目录
   assetsDir: 'static',
