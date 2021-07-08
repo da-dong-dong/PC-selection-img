@@ -1,8 +1,8 @@
 /******************************** 内容 ***************************************/
 <template>
-    <div>
+    <div style="height:88vh">
         <h3 class="paddingL15">{{textTile}}</h3>
-        <div class="result-box" style="height: 100%;" @click="onClickShowModel($event)" v-if="tabIndex!==9">
+        <div class="result-box" style="height: 100%;width: 100%;overflow: auto" @click="onClickShowModel($event)" v-if="tabIndex!==9">
             <div v-if="tabIndex==8">
               <Button @click="backSelectImg">还原所选</Button>
               <Button @click="allBackImg" style="margin-left:0.5rem;">全部还原</Button>
@@ -127,13 +127,13 @@ export default {
       if (e) {
         // 选中
         for (let i = 0; i < arrp.length; i++) {
-          if (!arrp[i].goodsNamesId.includes(val.itemGoodsId)) {
+          if (!arrp[i].goodsNamesId.includes(val.itemGoodsId) && !val.imgIds.includes(arrp[i].id)) {
             arrp[i].goodsNames.push(val.name)
             arrp[i].goodsNamesId.push(val.itemGoodsId)
             this.$set(arrp[i], 'isCheck', true)
+            val.imgIds.push(arrp[i].id)
           }
           delImg.push(arrp[i].id)
-          val.imgIds.push(arrp[i].id)
         }
       } else {
         // 取消选中
@@ -267,5 +267,11 @@ overflow:hidden;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.vue-drag-select .select-wrapper{
+  height: 100% !important;
+}
+/deep/.vue-drag-select .select-wrapper {
+    height: 100% !important;
 }
 </style>

@@ -1,6 +1,6 @@
 /******************************** tab栏  内容 ***************************************/
 <template>
-  <div @click="onClickShowModel">
+  <div @click="onClickShowModel" style="height:100%">
       <!-- tab栏 -->
       <tab :tabIndex="tabIndex" @onClickTab="onClickTab" />
 
@@ -24,7 +24,7 @@
       </Modal>
 
       <!-- 保存 -->
-      <save v-if="tabIndex===6"/>
+      <save v-if="showSave" :showSave.sync="showSave"/>
 
       <!-- 标记说明 绘制图片 -->
       <Modal v-model="showPS" fullscreen :closable="false" :footer-hide="true">
@@ -87,7 +87,8 @@ export default {
       showPhotoInstructions: false,
       photoInstructions: '', // 客人要求
       showPS: false, // 标记说明
-      imgObj: {}
+      imgObj: {},
+      showSave: false
     }
   },
   methods: {
@@ -104,6 +105,10 @@ export default {
 
     // 点击tab
     onClickTab (e) {
+      if (e.val === 6) {
+        this.showSave = true
+        return
+      }
       this.tabIndex = e.val
       let title = ''
       let title1 = ''
@@ -377,9 +382,11 @@ export default {
 
   watch: {
     // 监听选中值
-    // get_allImg () {
-    //   this.textTile = `查看全部(共${this.get_allImg.length}张)`
-    // }
+    get_allImg () {
+      if (this.tabIndex === 0) {
+        this.textTile = `查看全部(共${this.get_allImg.length}张)`
+      }
+    }
   }
 
 }

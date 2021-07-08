@@ -7,7 +7,8 @@
                 <ul>
                     <li v-for="(item,index) in tabText" :key="item.ico" :class="index==tabIndex?'active':''" @click="onClickTab(index,item.title)">
                         <div class="icon-img">
-                            <Icon :type="item.ico" />
+                            <!-- <Icon :type="item.ico" /> -->
+                            <i class="iconfont" :class="item.ico" ></i>
                         </div>
                         <div class="name">{{item.title}}</div>
                     </li>
@@ -46,31 +47,31 @@ export default {
       tabText: [
         {
           title: "查看全部",
-          ico: 'ios-apps'
+          ico: 'icon-quanbu'
         },
         {
           title: "查看视频",
-          ico: 'ios-film-outline'
+          ico: 'icon-shipin'
         },
         {
           title: "查看选中",
-          ico: 'ios-images'
+          ico: 'icon-tupian_xuanzhong'
         },
         {
           title: "查看未选",
-          ico: 'ios-images-outline'
+          ico: 'icon-weixuanzhong1'
         },
         {
           title: "查看入底",
-          ico: 'md-image'
+          ico: 'icon-daoruditu'
         },
         {
           title: "查看入册",
-          ico: 'ios-image-outline'
+          ico: 'icon-ruceguanli-'
         },
         {
           title: "进入保存",
-          ico: 'md-list-box'
+          ico: 'icon-166991'
         }
       ]
     }

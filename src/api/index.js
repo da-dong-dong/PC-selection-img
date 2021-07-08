@@ -1,6 +1,7 @@
 let baseApi
 // VUE_APP_MODE  VUE_APP_MODE
-switch (process.env.VUE_APP_MODE) {
+// switch (process.env.VUE_APP_MODE) {
+switch ("test") {
   case 'production':
     baseApi = `//napi.lyfz.net/pro/api`
     break

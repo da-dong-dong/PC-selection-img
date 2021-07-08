@@ -1,10 +1,10 @@
 <template>
   <div class="ps-container ps" @click="clickFun($event)">
     <div class="icon-top-btn lihe">
-      <span class="icon-btn" title="重置 开始新的绘制" @click="resetDrawFun"><Icon class="iconfont" type="md-refresh" /></span>
-      <span class="icon-btn" title="保存绘制完成的说明图片" @click="screenshots"><Icon class="iconfont" type="ios-paper-outline" /></span>
+      <span class="icon-btn" title="重置 开始新的绘制" @click="resetDrawFun"><i class="iconfont icon-f14"></i></span>
+      <span class="icon-btn" title="保存绘制完成的说明图片" @click="screenshots"><i class="iconfont icon-baocun_mian"></i></span>
       <span class="icon-btn xian"></span>
-      <span class="icon-btn" title="新建文件" @click="popup1 = true"><Icon type="md-add" /></span>
+      <span class="icon-btn" title="新建文件" @click="popup1 = true"><i class="iconfont icon-xinchuangkou" style="font-size: 20px"></i></span>
       <span class="icon-btn" title="打开图片">
         <Upload action="" :before-upload="fileFun" accept="image/gif,image/jpeg,image/jpg,image/png"  :format="['jpg','jpeg','png']">
           <!-- <i class="iconfont icon-dakai" style="font-size: 15px;position: relative;top: -1px;color: #999"></i> -->
@@ -30,29 +30,29 @@
           <!-- '#ed4014', '#ff9900', '#19be6b', '#2db7f5', '#515a6e', '#fff' -->
         </div>
 
-        <span class="icon-btn" @click="drawClickFun(5)" title="画线"><Icon type="ios-brush" /></span>
-        <span class="icon-btn" title="箭头" @click="drawClickFun(2)"><Icon type="md-remove" /></span>
-        <span class="icon-btn" @click="drawClickFun(1)" title="矩形"><Icon type="ios-square-outline" /></span>
-        <span class="icon-btn" @click="drawClickFun(3)" title="圆形"><Icon type="ios-radio-button-off" /></span>
-        <span class="icon-btn" @click="drawClickFun(4)" title="文字"><Icon type="ios-appstore" /></span>
+        <span class="icon-btn" @click="drawClickFun(5)" title="画线"><i class="iconfont icon-pan_icon" style="font-size: 16px;"></i></span>
+        <span class="icon-btn" title="箭头" @click="drawClickFun(2)"><i class="iconfont icon-arrow-up-copy"></i></span>
+        <span class="icon-btn" @click="drawClickFun(1)" title="矩形"><i class="iconfont icon-juxing"></i></span>
+        <span class="icon-btn" @click="drawClickFun(3)" title="圆形"><i class="iconfont icon-xuanze" style="font-size: 20px"></i></span>
+        <span class="icon-btn" @click="drawClickFun(4)" title="文字"><i class="iconfont icon-A"></i></span>
       </Poptip>
 
       <span class="icon-btn xian"></span>
       <span class="icon-btn" v-show="isLoad" title="导入图片" style="position: relative;top: -1px;">
           <Upload action="" :before-upload="importImgFun" accept="image/gif,image/jpeg,image/jpg,image/png"  :format="['jpg','jpeg','png']">
-           <Icon type="ios-images-outline" />
+           <i class="iconfont icon-method-draw-image" style="font-size: 16px;color: #999"></i>
           </Upload>
       </span>
-      <span class="icon-btn" v-show="!isLoad"> <Icon type="ios-images-outline" /></span>
+      <span class="icon-btn" v-show="!isLoad"> <i class="iconfont icon-method-draw-image" style="font-size: 16px;color: #999"></i></span>
 
       <span class="icon-btn xian"></span>
-      <span class="icon-btn" @click="narrowFun" title="缩小"><Icon type="ios-remove-circle-outline" /></span>
-      <span class="icon-btn" @click="amplificationFun" title="放大"><Icon type="ios-add-circle" /></span>
+      <span class="icon-btn" @click="narrowFun" title="缩小"><i class="iconfont icon-suoxiao"></i></span>
+      <span class="icon-btn" @click="amplificationFun" title="放大"><i class="iconfont icon-fangda"></i></span>
       <span class="icon-btn xian"></span>
-      <span class="icon-btn" title="可选择" @click="allElCanSel"><Icon type="ios-send" /></span>
+      <span class="icon-btn" title="可选择" @click="allElCanSel"><i class="iconfont icon-xuanze2" style="position: relative;top: -1px;font-size: 16px"></i></span>
 
       <span class="icon-btn xian"></span>
-      <span class="icon-btn" title="裁剪" @click="linkTailoring"><Icon type="md-shuffle" /></span>
+      <span class="icon-btn" title="裁剪" @click="linkTailoring"><i class="iconfont icon-jianqie"></i></span>
 
       <RadioGroup v-show="tailoring" v-model="radVal" size="small" style="position: relative;top: -3px;">
         <Radio label="1">矩形裁剪</Radio>

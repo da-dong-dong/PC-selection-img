@@ -32,4 +32,8 @@ export default {
 
 <style lang="scss">
   @import "~@/util/comm.scss";
+
+</style>
+<style>
+  @import "~@/util/icons.css";
 </style>

@@ -395,7 +395,8 @@ export default {
                 // 转成json 截取字符串
                 let strIndex = item.json.indexOf("completeJson=")
                 let strJson = item.json.substring(strIndex)
-                strJson = JSON.parse(strJson.substring(0, strJson.length - 1).replace("completeJson=", ''))
+                let strEndIndex = strJson.indexOf("}]},")
+                strJson = JSON.parse(strJson.substring(0, strEndIndex + 3).replace("completeJson=", ''))
 
                 item.recordListJson = strJson
                 return item
@@ -498,7 +499,10 @@ export default {
       }
       // console.log(completeJson, params)
       updateChooseDetails(params).then(res => {
-        console.log(res)
+        if (res.code === 200) {
+          this.modal_loading = false
+          this.popup15 = false
+        }
       })
     }
   },
@@ -525,6 +529,12 @@ export default {
     this.statistics.total = this.get_allImg.length - noSelectImgNum
     this.statistics.bookTotal = prtImgNum
     this.statistics.bottomTotal = outImgNum
+  },
+
+  watch: {
+    showSave (val) {
+      this.$emit("update:showSave", val)
+    }
   }
 
 }

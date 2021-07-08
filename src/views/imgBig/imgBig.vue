@@ -39,6 +39,11 @@
           <p>剩余未选相片张数：{{noSelectImgNum}}</p>
           <p>已删相片张数：0</p>
         </div>
+
+        <!-- 缓存图片 -->
+        <div id="imgs" style="position: relative;z-index: 8000;">
+          <img v-for="(item,index) in arrImg" :key="index" :src="item" alt="" srcset="">
+        </div>
     </div>
 </template>
 
@@ -63,6 +68,8 @@ export default {
   },
   data () {
     return {
+      // 缓存当前图片
+      arrImg: [],
       myViewer: null,
       loading: false,
       config: {
@@ -223,6 +230,8 @@ export default {
           this.index = e.detail.index
           let _this = this
           const next1 = document.querySelector('.viewer-next')
+
+          this.arrImg = [`${this.get_allImg[this.index === 0 ? 0 : this.index - 1].url}&size=p`, `${this.get_allImg[this.index === this.get_allImg.length ? this.get_allImg.length : this.index + 1].url}&size=p`]
 
           next1.onclick = function (v) {
             if (_this.index + 1 === _this.allImgLength) {

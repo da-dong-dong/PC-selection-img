@@ -59,7 +59,8 @@ export default {
     httpAllImg (val) {
       this.picServerModel = false
       let allImg = []
-      console.log(val, this.get_picGoods)
+      console.log('所有图片集合：', val)
+      console.log('所有商品：', this.get_picGoods)
       // 添加商品字段goodsNames  [1, 2, 3].includes(2)
       val.map(item => {
         let json = {}
@@ -85,7 +86,7 @@ export default {
     getChooseDetails (itemId) {
       getChooseDetails({ itemId }).then(res => {
         let { orderItempProcessChooseGoodsVos, completeJson, bookCount, bottomCount, countBookCount, countBottomCount, contactNames, orderNo, itemNo, financeId, orderId } = res.data
-        console.log(res.data)
+        console.log('获取选片详情:', res.data)
         let json = {
           countNum: 0,
           countP: 0,
@@ -114,6 +115,7 @@ export default {
         if (completeJson) {
           // 判断是否使用选片记录
           completeJson = this.get_record ? this.get_record : JSON.parse(completeJson)
+
           picGoods = []
           orderItempProcessChooseGoodsVos.map(item => {
             completeJson.productList.map(_ => {
@@ -144,7 +146,7 @@ export default {
             })
           })
           delImgs = completeJson.delImgs
-          let lodArr = [picGoods.pop(), picGoods.pop()]
+          let lodArr = [completeJson.productList.pop(), completeJson.productList.pop()]
           // 循环过滤新增商品
           let set = picGoods.map(item => item.itemGoodsId)
           let resArr = orderItempProcessChooseGoodsVos.filter(item => !set.includes(item.itemGoodsId))
@@ -180,7 +182,6 @@ export default {
             }
             picGoods.push(goodsJson)
           })
-
           picGoods.push(...lodArr)
         } else {
           orderItempProcessChooseGoodsVos.map(item => {
@@ -217,7 +218,11 @@ export default {
           picGoods.push(...picGoodsTow)
         }
         // 过滤删除的商品
-        picGoods = picGoods.filter(item => item.goodsStatus === 'NORMAL')
+        picGoods = picGoods.filter(item => {
+          if (item.goodsStatus === 'NORMAL' || item.name === "入底" || item.name === "入册") {
+            return true
+          }
+        })
         // 存储勾选商品信息
         this.mut_picGoods(picGoods)
 
@@ -275,7 +280,7 @@ export default {
         type: t
       }
       categoryList(parmas).then(res => {
-        console.log(res.data)
+        console.log('取件方式:', res.data)
         this.mut_pickList(res.data)
       })
     },
@@ -290,7 +295,7 @@ export default {
         type: t
       }
       categoryList(parmas).then(res => {
-        console.log(res.data)
+        console.log('商品类别:', res.data)
         this.mut_goodesList(res.data)
       })
     }
